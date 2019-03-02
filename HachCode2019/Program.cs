@@ -217,7 +217,7 @@ namespace HachCode2019Slides
                 int counter = 0;
                 while (SlideNode != null)
                 {
-                    if (counter++ > 100) break;
+                    if (counter++ > 200) break;
                     if (SlideNode.Value.Tags.Count / 2 <= bestScore) break;
                     var nextNode = SlideNode.Next;
                     var score = GetScore(prev, SlideNode.Value);

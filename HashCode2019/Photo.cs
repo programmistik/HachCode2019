@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace HachCode2019
+namespace HashCode2019
 {
     public class Photo /*: IComparable
 */    {

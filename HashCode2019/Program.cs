@@ -1,5 +1,4 @@
-﻿using HachCode2019;
-using Microsoft.Win32;
+﻿using HashCode2019;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 
-namespace HachCode2019Slides
+namespace HashCode2019Slides
 {
     class Program
     {
@@ -17,26 +16,14 @@ namespace HachCode2019Slides
 
         static void Main(string[] args)
         {
-            string thisAppPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            //string file = System.IO.Path.Combine(thisAppPath, "a_example.txt");
-            //string file = System.IO.Path.Combine(thisAppPath, "b_lovely_landscapes.txt");
-            //string file = System.IO.Path.Combine(thisAppPath, "c_memorable_moments.txt");
-            string file = System.IO.Path.Combine(thisAppPath, "d_pet_pictures.txt");
-            //string file = System.IO.Path.Combine(thisAppPath, "e_shiny_selfies.txt");
+            string thisAppPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            string file = Path.Combine(thisAppPath, "a_example.txt");
+            //string file = Path.Combine(thisAppPath, "b_lovely_landscapes.txt");
+            //string file = Path.Combine(thisAppPath, "c_memorable_moments.txt");
+            //string file = Path.Combine(thisAppPath, "d_pet_pictures.txt");
+            //string file = Path.Combine(thisAppPath, "e_shiny_selfies.txt");
             PathToFile = file;
 
-            //OpenFileDialog dlg = new OpenFileDialog
-            //{
-            //    InitialDirectory = Convert.ToString(Environment.SpecialFolder.MyDocuments),
-            //    DefaultExt = ".txt",
-            //    Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*"
-            //};
-
-            //if (dlg.ShowDialog() == true)
-            //{
-            //    PathToFile = dlg.FileName;
-            //}
-            //var file = PathToFile;  
 
             string[] textLines;
             string FirstLine;

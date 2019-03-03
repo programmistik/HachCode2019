@@ -1,10 +1,12 @@
 ﻿using HachCode2019;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+
 
 namespace HachCode2019Slides
 {
@@ -19,10 +21,23 @@ namespace HachCode2019Slides
             //string file = System.IO.Path.Combine(thisAppPath, "a_example.txt");
             //string file = System.IO.Path.Combine(thisAppPath, "b_lovely_landscapes.txt");
             //string file = System.IO.Path.Combine(thisAppPath, "c_memorable_moments.txt");
-            //string file = System.IO.Path.Combine(thisAppPath, "d_pet_pictures.txt");
-            string file = System.IO.Path.Combine(thisAppPath, "e_shiny_selfies.txt");
-            PathToFile = file;
+            string file = System.IO.Path.Combine(thisAppPath, "d_pet_pictures.txt");
             //string file = System.IO.Path.Combine(thisAppPath, "e_shiny_selfies.txt");
+            PathToFile = file;
+
+            //OpenFileDialog dlg = new OpenFileDialog
+            //{
+            //    InitialDirectory = Convert.ToString(Environment.SpecialFolder.MyDocuments),
+            //    DefaultExt = ".txt",
+            //    Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*"
+            //};
+
+            //if (dlg.ShowDialog() == true)
+            //{
+            //    PathToFile = dlg.FileName;
+            //}
+            //var file = PathToFile;  
+
             string[] textLines;
             string FirstLine;
 
@@ -67,57 +82,13 @@ namespace HachCode2019Slides
                     InitialSlides.Add(new Slide(item));
                 }
 
-                InitialSlides.AddRange(GetVerticalSlides(VerticalPhotos));
+                InitialSlides.AddRange(GetVerticalSlidesV2(VerticalPhotos));
 
-                //var RealSlideShow = new List<Slide>();
-
-                //RealSlideShow = GetFinalRealSlides(InitialSlides, RealSlideShow);
 
                 var RealSlideShow = GetFinalRealSlidesV2(InitialSlides);
 
-                //Slide currentSlide = InitialSlides[0];
-                //RealSlideShow.Add(currentSlide);
-
-                //while(InitialSlides.Count() > 0)
-                //{
-                //    //Slide currentSlide = InitialSlides[i];
-                //    // Slide mostSuitableSlide = InitialSlides.Where(s => s.Tags.Intersect(currentSlide.Tags).Count() > 0 && s.Tags.Except(currentSlide.Tags).Count() > 0).OrderBy(s => s.Tags.Count()).FirstOrDefault();
-                //    Slide mostSuitableSlide = InitialSlides.FirstOrDefault(s => s.Tags.Intersect(currentSlide.Tags).Count() > 0 && s.Tags.Except(currentSlide.Tags).Count() > 0);
-                //    if (mostSuitableSlide != null)
-                //    {
-                //        RealSlideShow.Add(mostSuitableSlide);
-                //    }
-                //    else
-                //    {
-                //        break;
-                //    }
-
-                //    InitialSlides.Remove(currentSlide);
-                //    InitialSlides.Remove(mostSuitableSlide);
-
-                //    currentSlide = mostSuitableSlide;
-
-                //}
-                //while (HorizontalPhotos.Count > 0)
-                //{
-                //    //string xtag = slide.Photos[0].Tags[0];
-                //    //var xSlide = HorizontalPhotos.Where(x => x.Tags.Where(z => z));
-                //    var photosdf = HorizontalPhotos.Where(p => p.Tags.Intersect(slide.Tags).Count() > 0 && p.Tags.Except(slide.Tags).Count() > 0);
-                //}
-
-                //SortedList<string, Photo> sortedList = new SortedList<string, Photo>();
 
                 GenerateOutputFile(RealSlideShow);
-                //foreach (var item in RealSlideShow)
-                //{
-                //    string ss = string.Empty;
-                //    foreach (var tags in item.Tags)
-                //    {
-                //        ss += tags + " ";
-                //    }
-
-                //    Console.WriteLine(item.Photos[0].Orientation + " " + ss);
-                //}
             }
 
             Console.WriteLine("Done!");
@@ -157,13 +128,6 @@ namespace HachCode2019Slides
         public static List<Slide> GetVerticalSlides(List<Photo> verticalPhotos)
         {
             List<Slide> verticalSlides = new List<Slide>();
-            //List<Photo> currentVerticalPhotos = verticalPhotos.OrderBy(p => p.Tags.Count()).ToList();
-            //var VerticalPhotosSlides = new List<Slide>();
-            //var currentPhoto = verticalPhotos[0];
-            //while(currentVerticalPhotos.Count() > 0)
-            //{
-            //    var mostSuitablePhoto = currentVerticalPhotos.Last(p => p.Tags.Intersect(currentPhoto.Tags).Count() == 0);
-            //}
 
             for(int i = 0; i < verticalPhotos.Count()/2; i++)
             {
@@ -217,7 +181,7 @@ namespace HachCode2019Slides
                 int counter = 0;
                 while (SlideNode != null)
                 {
-                    if (counter++ > 100) break;
+                    if (counter++ > 10000) break;
                     if (SlideNode.Value.Tags.Count / 2 <= bestScore) break;
                     var nextNode = SlideNode.Next;
                     var score = GetScore(prev, SlideNode.Value);
@@ -232,6 +196,64 @@ namespace HachCode2019Slides
                 SlidesList.Remove(mostSuitableSlide);
             }
             return RealSlideShow;
+        }
+
+        public static List<Slide> GetVerticalSlidesV2(List<Photo> verticalPhotos)
+        {
+            List<Slide> verticalSlides = new List<Slide>();
+
+            while (verticalPhotos.Count() > 1)
+            {
+                var First = verticalPhotos[0];
+                var Second = verticalPhotos[1];
+                var moreSuitableSecond = Second;
+                var count = First.Tags.Intersect(moreSuitableSecond.Tags).Count();
+
+                if (count == 0)
+                {
+                    Second = moreSuitableSecond;
+                    Slide slide = new Slide(new List<Photo> { First, Second });
+                    verticalSlides.Add(slide);
+                    verticalPhotos.Remove(First);
+                    verticalPhotos.Remove(Second);
+                }
+                else
+                {
+                    if (verticalPhotos.Count() == 2)
+                    {
+                        Second = verticalPhotos[1];
+                        Slide slide = new Slide(new List<Photo> { First, Second });
+                        verticalSlides.Add(slide);
+                        verticalPhotos.Remove(First);
+                        verticalPhotos.Remove(Second);
+                    }
+                    else if (verticalPhotos.Count() > 2)
+                    {
+                        int index = 2;
+                        for (int i = 2; i < verticalPhotos.Count(); i++)
+                        {
+                            if (First.Tags.Intersect(verticalPhotos[i].Tags).Count() == 0)
+                            {
+                                index = i;
+                                count = First.Tags.Intersect(verticalPhotos[i].Tags).Count();
+                                break;
+                            }
+                            else if (First.Tags.Intersect(verticalPhotos[i].Tags).Count() < count)
+                            {
+                                index = i;
+                                count = First.Tags.Intersect(verticalPhotos[i].Tags).Count();
+                            }
+                        }
+                        Second = verticalPhotos[index];
+                        Slide slide = new Slide(new List<Photo> { First, Second });
+                        verticalSlides.Add(slide);
+                        verticalPhotos.Remove(First);
+                        verticalPhotos.Remove(Second);
+                    }
+                }
+            }
+            
+            return verticalSlides;
         }
     }
 }
